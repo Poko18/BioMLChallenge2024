@@ -182,7 +182,7 @@ class BinderBlueprints:
             os.makedirs(output_dir)
         element_lengths = "_".join(map(str, self.element_lengths))
         file_prefix = f"{self.elements}_{self.size}_el{element_lengths}_li{self.linker}"
-        sse_file = os.path.join(output_dir, f"{file_prefix}_sse.pt")
+        sse_file = os.path.join(output_dir, f"{file_prefix}_ss.pt")
         adj_file = os.path.join(output_dir, f"{file_prefix}_adj.pt")
         torch.save(torch.from_numpy(self.sse).float(), sse_file)
         torch.save(torch.from_numpy(self.adj).float(), adj_file)
