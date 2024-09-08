@@ -197,16 +197,19 @@ python /RFdiffusion_path/run_inference.py \
     inference.num_designs={number_of_diffusions} \
     diffuser.partial_T={steps}
 ```
+
 These newly refined designs were subsequently validated using [ProteinMPNN and AlphaFold2](#proteinmpnn-and-alphafold2-validation).
 
 ---
 
 ### Pyrosetta filtering
+
 For the final selection of binders, we calculated several structural and energetic metrics using **PyRosetta** to identify the most promising candidates. Use script `scripts/pyrosetta_metrics.py` to generates these metrics:
 
 ```bash
 python scripts/pyrosetta_metrics.py {pdb} {target_chain} {binder_chain} {output_dataframe} {xml_file}
 ```
+
 > **_NOTE:_** The output dataframe from AlphaFold2 validation can be reused, with new values appended for each protein.
 
 ---
