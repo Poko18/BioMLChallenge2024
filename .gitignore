@@ -1,4 +1,4 @@
-data/*
+data/binder_blueprints/
 
 # Ignore Python bytecode
 __pycache__/
