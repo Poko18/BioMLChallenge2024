@@ -29,9 +29,9 @@ Here's a step-by-step breakdown of the workflow used to design and validate the 
 
 We were constrained to designing binders with a maximum length of 80 amino acids (AA). While smaller binders could be extended with linkers, we aimed to engineer larger binders at the full 80 AA, giving us more flexibility and space for engineering.
 
-To achieve this, we developed a `BinderBlueprint` generator (`scripts/binder_blueprints.py`) to create different adjacency matrices for binders of a defined length and secondary structural elements (SSEs). These matrices are later used with RFdiffusion for scaffold-guided diffusion of binders towards desired target hotspots.
+To achieve this, we developed a `BinderBlueprint` generator to create different adjacency matrices for binders of a defined length and secondary structural elements (SSEs). These matrices are later used with RFdiffusion for scaffold-guided diffusion of binders towards desired target hotspots.
 
-Follow the example below to generate binder blueprints, or use the notebook `scripts/01_generate_scaffolds.ipynb` to generate binder blueprints for different scaffolds:
+Follow the example below to generate binder blueprints, or run the provided script `scripts/binder_blueprints.py` to generate binder blueprints for different scaffolds - binders with different structural elements.
 
 If you want to provide just the size of the binder (with the length of beta strands being half that of helices):
 
@@ -204,7 +204,7 @@ These newly refined designs were subsequently validated using [ProteinMPNN and A
 
 ### Pyrosetta filtering
 
-For the final selection of binders, we calculated several structural and energetic metrics using **PyRosetta** to identify the most promising candidates. Use script `scripts/pyrosetta_metrics.py` to generates these metrics:
+For the final selection of binders, we used **PyRosetta** to compute a range of structural and energetic metrics, helping us identify the most promising candidates. The script `scripts/pyrosetta_metrics.py` generates these metrics, with key ones including `ddg`, `rg`, `charge`, `sap`, `shape_comp`, `cms`, `ddg_cms`, and `vbuns`.
 
 ```bash
 python scripts/pyrosetta_metrics.py {pdb} {target_chain} {binder_chain} {output_dataframe} {xml_file}

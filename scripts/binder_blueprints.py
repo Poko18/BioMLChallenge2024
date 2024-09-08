@@ -194,3 +194,44 @@ class BinderBlueprints:
             f"linker={self.linker}, element_lengths={self.element_lengths}, "
             f"linker_lengths={self.linker_lengths})"
         )
+
+
+if __name__ == "__main__":
+    import random
+
+    # Define parameters
+    BINDER_LENGTH = 80
+    NUM_BLUEPRINTS = 50
+    ELEMENT_VARIATIONS = ["HHH", "HHHH", "HEEHE", "HHHHH"]
+    LINKER_LENGTH_RANGE = (3, 4)
+    ELEMENT_LENGTH_VARIATION_RANGE = (-1, 2)
+    OUTPUT_DIR = "../data/binder_blueprints"
+
+    # Generate binder blueprints
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    for i in range(NUM_BLUEPRINTS):
+        elements = random.choice(ELEMENT_VARIATIONS)
+        linker_lengths = [
+            random.randint(*LINKER_LENGTH_RANGE) for _ in range(len(elements) - 1)
+        ]
+        base_length = BINDER_LENGTH - sum(linker_lengths)
+        element_counts = {"H": elements.count("H"), "E": elements.count("E")}
+        element_lengths = []
+
+        for sse in elements:
+            if element_counts[sse] > 0:
+                avg_length = base_length // element_counts[sse]
+                length_variation = random.randint(*ELEMENT_LENGTH_VARIATION_RANGE)
+                element_length = max(1, avg_length + length_variation)
+                element_lengths.append(element_length)
+                base_length -= element_length
+                element_counts[sse] -= 1
+
+        blueprint = BinderBlueprints(
+            elements=elements,
+            size=BINDER_LENGTH,
+            element_lengths=element_lengths,
+            linker_lengths=linker_lengths,
+        )
+        blueprint.save_adj_sse(output_dir=OUTPUT_DIR)
+        print(f"Saved binder blueprint {i + 1} with elements {elements}")
