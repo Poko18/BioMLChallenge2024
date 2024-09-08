@@ -1,7 +1,7 @@
 import os
-import numpy as np
 
 import torch
+import numpy as np
 
 
 class BinderBlueprints:
@@ -89,7 +89,8 @@ class BinderBlueprints:
     def calculate_structure_lengths(self):
         """
         Calculate the length of each secondary structure element and linkers
-        based on the total size or specified lengths.
+        based on the total size or specified lengths. Normally, the lengths of
+        strands are half of helices.
         """
         num_elements = len(self.elements)
         # Check if specific lengths are provided, otherwise calculate based on the total size
@@ -189,7 +190,7 @@ class BinderBlueprints:
 
     def __repr__(self):
         return (
-            f"StructureMatrixGenerator(elements={self.elements}, size={self.size}, "
+            f"BinderBlueprints(elements={self.elements}, size={self.size}, "
             f"linker={self.linker}, element_lengths={self.element_lengths}, "
             f"linker_lengths={self.linker_lengths})"
         )
