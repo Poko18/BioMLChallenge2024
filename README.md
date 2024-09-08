@@ -155,9 +155,11 @@ python /RFdiffusion_path/run_inference.py \
 ---
 
 ### ProteinMPNN and AlphaFold2 validation
+
 To validate the generated protein binders, we employed a two-step process combining **ProteinMPNN** for sequence design and **AlphaFold2** for structural validation.
 
 For non-symmetric binders, use the provided script `scripts/mpnn_af2.py`, which integrates ProteinMPNN for sequence generation and AlphaFold2 for structural validation:
+
 ```bash
 python scripts/mpnn_af2.py {pdb} {output} {target_chain} {binder_chain} \
     --sampling_temp {sampling_temp} \
@@ -167,7 +169,9 @@ python scripts/mpnn_af2.py {pdb} {output} {target_chain} {binder_chain} \
     --results_dataframe {output_folder} \
     --save_best_only
 ```
+
 For symmetric binders, use the script `scripts/mpnn_af2_sym.py`, which is adapted for symmetric designs:
+
 ```bash
 python scripts/mpnn_af2_sym.py {pdb} {output} {contig} \
   --num_seqs {num_seqs} \
