@@ -188,17 +188,32 @@ python scripts/mpnn_af2_sym.py {pdb} {output} {contig} \
 
 ### Partial diffusion refinement [Optional]
 
-[WIP]
+To further explore the structural space and related binder scaffolds, we applied **partial diffusion** to the best designed binders. This allowed us generate variations of the original designs.
+
+```bash
+python /RFdiffusion_path/run_inference.py \
+    inference.input_pdb={pdb} \
+    contigmap.contigs=[{contigs}] \
+    inference.num_designs={number_of_diffusions} \
+    diffuser.partial_T={steps}
+```
+These newly refined designs were subsequently validated using [ProteinMPNN and AlphaFold2](#proteinmpnn-and-alphafold2-validation).
 
 ---
 
 ### Pyrosetta filtering
+For the final selection of binders, we calculated several structural and energetic metrics using **PyRosetta** to identify the most promising candidates. Use script `scripts/pyrosetta_metrics.py` to generates these metrics:
 
-[WIP]
+```bash
+python scripts/pyrosetta_metrics.py {pdb} {target_chain} {binder_chain} {output_dataframe} {xml_file}
+```
+> **_NOTE:_** The output dataframe from AlphaFold2 validation can be reused, with new values appended for each protein.
+
+---
 
 ## License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is open-source and available under the MIT License. Feel free to explore, modify, and build upon it. For more details, see the [LICENSE](LICENSE) file.
 
 ## Get in Touch
 
