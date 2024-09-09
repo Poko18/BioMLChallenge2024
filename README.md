@@ -12,6 +12,7 @@ This repository is dedicated to the **BioML Challenge 2024: Bits to Binders** co
    - [Binder Blueprints](#binder-blueprints)
    - [RFdiffusion of Protein Binders](#rfdiffusion-of-protein-binders)
    - [ProteinMPNN and AlphaFold2 Validation](#proteinmpnn-and-alphafold2-validation)
+   - [Binder (backbone) redesign](#binder-backbone-redesign-optional)
    - [Partial Diffusion Refinement](#partial-diffusion-refinement-optional)
    - [Pyrosetta Filtering](#pyrosetta-filtering)
 4. [License](#license)
@@ -182,6 +183,27 @@ python scripts/mpnn_af2_sym.py {pdb} {output} {contig} \
   --results_dataframe {output_dir}/sym_diff \
   --fix_pdb --save_best_only --initial_guess \
   --use_multimer --use_soluble
+```
+
+---
+
+### Binder (backbone) redesign [Optional]
+
+To explore variations in binder design, we used the `scripts/binder_redesign.py` script, which utilizes the **ColabDesign** library. This script allows for the refinement of protein binders or the generation of binder scaffold variants that can be used as input for **partial diffusion**.
+
+```bash
+python /scripts/binder_redesign.py \
+    input_pdb={pdb} \
+    --num_recycles={number_of_recycles} \
+    --num_models={number_of_models} \
+    --recycle_mode={recycle_mode_choice} \
+    --target_chain={target_chain} \
+    --target_flexible \
+    --binder_chain={binder_chain} \
+    --soft_iters={soft_iterations} \
+    --hard_iters={hard_iterations} \
+    --output_file={output_pdb} \
+    --data_dir={model_data_directory} # path to alphafold2 params
 ```
 
 ---
