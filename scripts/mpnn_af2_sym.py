@@ -3,16 +3,12 @@ Run ColabDesign on symmetrical proteins
 """
 import argparse
 import fcntl
-import glob
 import logging
 import math
 import os
-import re
-import shutil
 import time
 from string import ascii_uppercase, ascii_lowercase
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -24,7 +20,7 @@ from colabdesign.rf.utils import fix_pdb
 logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
-logger = logging.getLogger("binder_cycling.py")
+logger = logging.getLogger("sym_colabdesign.py")
 logging.getLogger("jax").setLevel(logging.ERROR)
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 logging.getLogger("matplotlib").setLevel(logging.ERROR)
@@ -58,6 +54,9 @@ parser.add_argument(
     "--rm_aa", type=str, default="C", help="residue to remove from the design"
 )
 parser.add_argument(
+    "--copies", type=int, default=1, help="number of repeating copies (default: 1)"
+)
+parser.add_argument(
     "--mpnn_batch", type=int, default=8, help="mpnn batch size (default: 8)"
 )
 parser.add_argument(
@@ -86,6 +85,7 @@ sampling_temp = args.sampling_temp
 mpnn_batch = args.mpnn_batch
 num_recycles = args.num_recycles
 rm_aa = args.rm_aa
+copies = args.copies
 fix_input_pdb = args.fix_pdb
 results_dataframe = args.results_dataframe
 save_best_only = args.save_best_only
@@ -251,6 +251,8 @@ af_model.prep_inputs(
     target_chain=",".join(target_chains),
     binder_chain=",".join(binder_chains),
     rm_aa=rm_aa,
+    copies=copies,
+    homooligomer=copies>1,
 )
 mpnn_out = run_mpnn_sampling(af_model, mpnn_model, num_seqs, mpnn_batch, sampling_temp)
 

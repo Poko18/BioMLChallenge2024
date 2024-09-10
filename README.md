@@ -173,6 +173,7 @@ python scripts/mpnn_af2_sym.py {pdb} {output} {contig} \
   --sampling_temp {sampling_temp} \
   --num_recycles {num_recycles} \
   --rm_aa="C" \
+  --copies=2 \
   --mpnn_batch {mpnn_batch} \
   --results_dataframe {output_dir}/sym_diff \
   --fix_pdb --save_best_only --initial_guess \
