@@ -176,7 +176,7 @@ python scripts/mpnn_af2_sym.py {pdb} {output} {contig} \
   --copies=2 \
   --mpnn_batch {mpnn_batch} \
   --results_dataframe {output_dir}/sym_diff \
-  --fix_pdb --save_best_only --initial_guess \
+  --save_best_only --initial_guess \
   --use_multimer --use_soluble
 ```
 
