@@ -1,6 +1,7 @@
 """
 Run ColabDesign on symmetrical proteins
 """
+
 import argparse
 import fcntl
 import logging
@@ -64,10 +65,14 @@ parser.add_argument(
     "--save_best_only", action="store_true", help="save only the best structures"
 )
 parser.add_argument(
-    "--initial_guess", action="store_true", help="use initial guess for alphafold2 validation"
+    "--initial_guess",
+    action="store_true",
+    help="use initial guess for alphafold2 validation",
 )
 parser.add_argument(
-    "--use_multimer", action="store_true", help="use multimer weights for alphafold2 validation"
+    "--use_multimer",
+    action="store_true",
+    help="use multimer weights for alphafold2 validation",
 )
 parser.add_argument(
     "--use_soluble", action="store_true", help="use soluble weights for mpnn"
@@ -105,7 +110,9 @@ def fix_pdb_file(file_path, contigs, outdir, ext="_fx"):
     """Fix pdb file based on contigs."""
     with open(file_path, "r") as f:
         pdb = fix_pdb(f.read(), contigs)
-    out_file_path = os.path.join(outdir, os.path.basename(file_path).replace(".pdb", f"{ext}.pdb"))
+    out_file_path = os.path.join(
+        outdir, os.path.basename(file_path).replace(".pdb", f"{ext}.pdb")
+    )
     with open(out_file_path, "w") as f:
         f.write(pdb)
     return out_file_path
@@ -128,7 +135,9 @@ def get_info(contig):
     return F, [fixed_chain, free_chain]
 
 
-def run_mpnn_sampling(pdb, mpnn_model, num_samples, batch_size, temperature, target_len):
+def run_mpnn_sampling(
+    pdb, mpnn_model, num_samples, batch_size, temperature, target_len
+):
     """Run MPNN sampling to generate protein sequences."""
     mpnn_model.prep_inputs(  # Only design binder chains
         pdb_filename=pdb,
@@ -157,13 +166,25 @@ def run_mpnn_sampling(pdb, mpnn_model, num_samples, batch_size, temperature, tar
     return mpnn_out
 
 
-def run_af2_predictions(mpnn_out, af_model, num_seqs, num_recycles, af_terms, output_path, pdb_name, pdb, binder_len):
+def run_af2_predictions(
+    mpnn_out,
+    af_model,
+    num_seqs,
+    num_recycles,
+    af_terms,
+    output_path,
+    pdb_name,
+    pdb,
+    binder_len,
+):
     """Run AF2 predictions on MPNN sampled sequences."""
     for n in range(num_seqs):
-        seq = mpnn_out["seq"][n][-binder_len:]*copies
+        seq = mpnn_out["seq"][n][-binder_len:] * copies
         logger.info(f"Running AF2 predictions for sequence {n+1}/{num_seqs}...")
         logger.debug(f"Predicting sequence: {seq}, with length {len(seq)}")
-        af_model.predict(seq=seq, num_recycles=num_recycles, num_models=1, verbose=False)
+        af_model.predict(
+            seq=seq, num_recycles=num_recycles, num_models=1, verbose=False
+        )
 
         for t in af_terms:
             mpnn_out[t].append(af_model.aux["log"][t])
@@ -176,7 +197,9 @@ def run_af2_predictions(mpnn_out, af_model, num_seqs, num_recycles, af_terms, ou
         mpnn_out["model_path"].append(current_model_path)
         mpnn_out["input_pdb"].append(pdb)
 
-        if not save_best_only or (mpnn_out["plddt"][n] > 0.7 and mpnn_out["rmsd"][n] < 3):
+        if not save_best_only or (
+            mpnn_out["plddt"][n] > 0.7 and mpnn_out["rmsd"][n] < 3
+        ):
             af_model.save_current_pdb(current_model_path)
 
         af_model._save_results(save_best=save_best_only, verbose=False)
@@ -187,17 +210,21 @@ def run_af2_predictions(mpnn_out, af_model, num_seqs, num_recycles, af_terms, ou
 ### Checks ###
 if num_seqs < mpnn_batch:
     mpnn_batch = num_seqs
-    logger.warning(f"num_seqs must be greater than or equal to mpnn_batch. Setting mpnn_batch to {mpnn_batch}")
+    logger.warning(
+        f"num_seqs must be greater than or equal to mpnn_batch. Setting mpnn_batch to {mpnn_batch}"
+    )
 elif num_seqs % mpnn_batch != 0:
     mpnn_batch = math.gcd(num_seqs, mpnn_batch)
-    logger.warning(f"num_seqs must be divisible by mpnn_batch. Setting mpnn_batch to {mpnn_batch}")
+    logger.warning(
+        f"num_seqs must be divisible by mpnn_batch. Setting mpnn_batch to {mpnn_batch}"
+    )
 
 if rm_aa == "":
     rm_aa = None
 
 ### Parse contigs
 contigs = []
-for contig_str in rf_contigs.replace(" ",":").replace(",",":").split(":"):
+for contig_str in rf_contigs.replace(" ", ":").replace(",", ":").split(":"):
     if len(contig_str) > 0:
         contig = []
         for x in contig_str.split("/"):
@@ -206,13 +233,13 @@ for contig_str in rf_contigs.replace(" ",":").replace(",",":").split(":"):
         contigs.append("/".join(contig))
 
 alphabet_list = list(ascii_uppercase + ascii_lowercase)
-chains = alphabet_list[:len(contigs)]
+chains = alphabet_list[: len(contigs)]
 info = [get_info(x) for x in contigs]
 fixed_pos = []
 fixed_chains = []
 free_chains = []
 both_chains = []
-for pos,(fixed_chain,free_chain) in info:
+for pos, (fixed_chain, free_chain) in info:
     fixed_pos += pos
     fixed_chains += [fixed_chain and not free_chain]
     free_chains += [free_chain and not fixed_chain]
@@ -220,9 +247,11 @@ for pos,(fixed_chain,free_chain) in info:
 
 target_chains = []
 binder_chains = []
-for n,x in enumerate(fixed_chains):
-    if x: target_chains.append(chains[n])
-    else: binder_chains.append(chains[n])
+for n, x in enumerate(fixed_chains):
+    if x:
+        target_chains.append(chains[n])
+    else:
+        binder_chains.append(chains[n])
 logger.debug(f"Target chains: {target_chains}")
 logger.debug(f"Binder chains: {binder_chains}")
 
@@ -249,7 +278,7 @@ mpnn_model = mk_mpnn_model(weights="soluble" if use_soluble else "original")
 
 
 ### Fix pdb by separating chains
-fix_pdb_dir=f"{output_folder}/fix_pdb"
+fix_pdb_dir = f"{output_folder}/fix_pdb"
 os.makedirs(fix_pdb_dir, exist_ok=True)
 pdb_fix = fix_pdb_file(pdb, contigs, fix_pdb_dir, ext="_fx")
 logger.info(f"Fixed pdb file saved to {pdb}")
@@ -265,12 +294,28 @@ af_model.prep_inputs(
     copies=copies,
     homooligomer=copies > 1,
 )
-target_len = int(af_model._target_len / len(target_chains)) # Target length for each chain
-binder_len = int(af_model._binder_len / len(binder_chains)) # Binder length for each chain
-mpnn_out = run_mpnn_sampling(pdb, mpnn_model, num_seqs, mpnn_batch, sampling_temp, target_len)
+target_len = int(
+    af_model._target_len / len(target_chains)
+)  # Target length for each chain
+binder_len = int(
+    af_model._binder_len / len(binder_chains)
+)  # Binder length for each chain
+mpnn_out = run_mpnn_sampling(
+    pdb, mpnn_model, num_seqs, mpnn_batch, sampling_temp, target_len
+)
 
 logger.info("Running AF2 predictions...")
-af2_out = run_af2_predictions(mpnn_out, af_model, num_seqs, num_recycles, af_terms, output_folder, pdb_basename, pdb, binder_len)
+af2_out = run_af2_predictions(
+    mpnn_out,
+    af_model,
+    num_seqs,
+    num_recycles,
+    af_terms,
+    output_folder,
+    pdb_basename,
+    pdb,
+    binder_len,
+)
 
 # Generate model paths for all sequences
 model_paths = [f"{output_folder}/{pdb_basename}_{n}.pdb" for n in range(num_seqs)]
