@@ -180,7 +180,6 @@ python scripts/mpnn_af2_sym.py {pdb} {output} {contig} \
   --use_multimer --use_soluble
 ```
 
-
 ## Binder (backbone) redesign [Optional]
 
 To explore variations in binder design, we used the `scripts/binder_redesign.py` script, which utilizes the **ColabDesign** library. This script allows for the refinement of protein binders or the generation of binder scaffold variants that can be used as input for **partial diffusion**.
@@ -213,6 +212,29 @@ python /RFdiffusion_path/run_inference.py \
 ```
 
 These newly refined designs were subsequently validated using [ProteinMPNN and AlphaFold2](#proteinmpnn-and-alphafold2-validation).
+
+### Symmetric partial diffusion [Optional]
+
+We can also apply partial diffusion while taking advantage of `C2` symmetry. To do this, the input needs to be an asymmetrical unit PDB file, with the binder in chain A and the target in chain B (processed from an already predicted complex).
+
+For example, the contig can be specified as: `80-80/0 B1-23/B67-134 80-80/0 B1-23/B67-134`.
+
+```bash
+python /RFdiffusion_path/run_inference.py \
+    --config-name=symmetry \
+    inference.symmetry="C2" \
+    inference.output_prefix={output_prefix}
+    inference.input_pdb={pdb} \
+    contigmap.contigs=[{contigs}] \
+    inference.num_designs={number_of_diffusions} \
+    diffuser.partial_T={steps} \
+    potentials.olig_intra_all=True \
+    potentials.olig_inter_all=True \
+    potentials.guide_scale=2 \
+    potentials.guide_decay="quadratic"
+```
+
+These newly refined designs can then be validated using [ProteinMPNN and AlphaFold2](#proteinmpnn-and-alphafold2-validation).
 
 ## Pyrosetta filtering
 
