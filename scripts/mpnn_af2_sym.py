@@ -1,5 +1,5 @@
 """
-Run ColabDesign on symmetrical proteins
+Run ColabDesign on symmetrical proteins (after partial diffusion)
 """
 
 import argparse
@@ -19,7 +19,7 @@ from colabdesign.rf.utils import fix_pdb
 
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("sym_colabdesign.py")
 logging.getLogger("jax").setLevel(logging.ERROR)
@@ -77,6 +77,9 @@ parser.add_argument(
 parser.add_argument(
     "--use_soluble", action="store_true", help="use soluble weights for mpnn"
 )
+parser.add_argument(
+    "--partial_diffusion", action="store_true", help="Input PDB from partial diffusion. Which means the sequence starts with the binder chain."
+)
 args = parser.parse_args()
 
 pdb = args.pdb
@@ -93,6 +96,7 @@ save_best_only = args.save_best_only
 initial_guess = args.initial_guess
 use_multimer = args.use_multimer
 use_soluble = args.use_soluble
+partial_diffusion = args.partial_diffusion
 
 
 ### Functions ###
@@ -136,7 +140,14 @@ def get_info(contig):
 
 
 def run_mpnn_sampling(
-    pdb, mpnn_model, num_samples, batch_size, temperature, target_len
+    pdb,
+    mpnn_model,
+    num_samples,
+    batch_size,
+    temperature,
+    target_len,
+    binder_len,
+    partial_diffusion=False,
 ):
     """Run MPNN sampling to generate protein sequences."""
     mpnn_model.prep_inputs(  # Only design binder chains
@@ -148,6 +159,9 @@ def run_mpnn_sampling(
     )
     # Fix target position
     fxpos = np.arange(target_len)
+    if partial_diffusion:
+        # Sequence starts with binder, so we need to shift the fixed positions
+        fxpos += binder_len
     mpnn_model._inputs["fix_pos"] = fxpos
     mpnn_model._inputs["bias"][fxpos] = (
         1e7 * np.eye(21)[mpnn_model._inputs["S"]][fxpos, :20]
@@ -163,6 +177,7 @@ def run_mpnn_sampling(
     for term in other_terms:
         if term not in mpnn_out:
             mpnn_out[term] = []
+    logger.debug(f"MPNN output: {mpnn_out['seq']}")
     return mpnn_out
 
 
@@ -179,7 +194,11 @@ def run_af2_predictions(
 ):
     """Run AF2 predictions on MPNN sampled sequences."""
     for n in range(num_seqs):
-        seq = mpnn_out["seq"][n][-binder_len:] * copies
+        if partial_diffusion:
+            seq_binder = mpnn_out["seq"][n][:binder_len]
+        else:
+            seq_binder = mpnn_out["seq"][n][-binder_len:]
+        seq = seq_binder * copies
         logger.info(f"Running AF2 predictions for sequence {n+1}/{num_seqs}...")
         logger.debug(f"Predicting sequence: {seq}, with length {len(seq)}")
         af_model.predict(
@@ -196,6 +215,7 @@ def run_af2_predictions(
         current_model_path = f"{output_path}/{pdb_name}_{n}.pdb"
         mpnn_out["model_path"].append(current_model_path)
         mpnn_out["input_pdb"].append(pdb)
+        mpnn_out["binder_seq"].append(seq_binder)
 
         if not save_best_only or (
             mpnn_out["plddt"][n] > 0.7 and mpnn_out["rmsd"][n] < 3
@@ -263,7 +283,7 @@ chain_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 chain_list = [x for x in chain_list]
 mpnn_terms = ["score", "seq"]
 af_terms = ["plddt", "i_ptm", "i_pae", "rmsd"]
-other_terms = ["model_path", "input_pdb"]
+other_terms = ["model_path", "input_pdb", "binder_seq"]
 labels = ["score"] + af_terms + other_terms + ["seq"]
 
 af_model = mk_af_model(
@@ -281,7 +301,7 @@ mpnn_model = mk_mpnn_model(weights="soluble" if use_soluble else "original")
 fix_pdb_dir = f"{output_folder}/fix_pdb"
 os.makedirs(fix_pdb_dir, exist_ok=True)
 pdb_fix = fix_pdb_file(pdb, contigs, fix_pdb_dir, ext="_fx")
-logger.info(f"Fixed pdb file saved to {pdb}")
+logger.info(f"Fixed pdb file saved to {pdb_fix}")
 
 
 ### Run MPNN sampling and AF2 predictions
@@ -294,6 +314,7 @@ af_model.prep_inputs(
     copies=copies,
     homooligomer=copies > 1,
 )
+
 target_len = int(
     af_model._target_len / len(target_chains)
 )  # Target length for each chain
@@ -301,7 +322,14 @@ binder_len = int(
     af_model._binder_len / len(binder_chains)
 )  # Binder length for each chain
 mpnn_out = run_mpnn_sampling(
-    pdb, mpnn_model, num_seqs, mpnn_batch, sampling_temp, target_len
+    pdb,
+    mpnn_model,
+    num_seqs,
+    mpnn_batch,
+    sampling_temp,
+    target_len,
+    binder_len,
+    partial_diffusion=partial_diffusion,
 )
 
 logger.info("Running AF2 predictions...")
