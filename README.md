@@ -75,6 +75,10 @@ We shorten the hCD20 protein model to only the part that is positioned on the ou
 
 ### Targeting Specific Hotspots
 
+<p align="start">
+    <img src="./data/imgs/binders.png" alt="A photo of colorful de novo designed protein binders arranged in a row" width="1100px" align="middle"/>
+</p>
+
 The only difference between the first two approaches is the choice of diffusion hotspots:
 
 Targeting a single hCD20 monomer: `[D76,D160,D161,D163,D166,D170,C177,C178,C182]`
@@ -127,6 +131,10 @@ python /RFdiffusion_path/run_inference.py \
 ```
 
 ### Designing Symmetric Binders
+
+<p align="start">
+    <img src="./data/imgs/symmetric_binders.png" alt="A photo of colorful de novo designed protein binders arranged in a row" width="1100px" align="middle"/>
+</p>
 
 To exploit the `C2` symmetry of hCD20, we generated symmetric binders. This required a small modification to RFdiffusion to allow for [non-receptor hotspots](https://github.com/RosettaCommons/RFdiffusion/commit/642e3643dcde2f7d70d6847f82cf889f29adf7d4).
 The contigs specify the symmetry relations as: `A65-87/A131-198 80-80/0 A65-87/A131-198 80-80/0`. For symmetric designs, we adjusted the potentials to avoid designs that did not interact properly, often using lower contact weights (`"type:olig_contacts,weight_intra:0.1,weight_inter:0.2"`) or even skipping guiding potentials.
