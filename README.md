@@ -4,17 +4,17 @@ This repository is dedicated to the **BioML Challenge 2024: Bits to Binders** co
 
 # Table of Contents
 
-1. [Overview](#overview)
-2. [Installation](#installation-%F0%9F%9B%A0%EF%B8%8F)
-3. [Workflow Overview](#workflow-overview)
+1. [Installation](#installation-%F0%9F%9B%A0%EF%B8%8F)
+2. [Workflow Overview](#workflow-overview)
    - [Binder Blueprints](#binder-blueprints)
    - [RFdiffusion of Protein Binders](#rfdiffusion-of-protein-binders)
    - [ProteinMPNN and AlphaFold2 Validation](#proteinmpnn-and-alphafold2-validation)
    - [Binder (backbone) redesign](#binder-backbone-redesign-optional)
    - [Partial Diffusion Refinement](#partial-diffusion-refinement-optional)
    - [Pyrosetta Filtering](#pyrosetta-filtering)
-4. [License](#license)
-5. [Get in Touch](#get-in-touch)
+3. [License](#license)
+4. [Get in Touch](#get-in-touch)
+5. [Citations](#citations)
 
 # Installation 🛠️
 
@@ -255,3 +255,49 @@ This project is open-source and available under the MIT License. Feel free to ex
 # Get in Touch
 
 For questions, suggestions, or collaborations, feel free to reach out tadej.satler@gmail.com
+
+# Citations
+
+```bibtex
+@article{Watson2023,
+  title = {De novo design of protein structure and function with RFdiffusion},
+  author = {Watson,  Joseph L. and Juergens,  David and Bennett,  Nathaniel R. and Trippe,  Brian L. and Yim,  Jason and Eisenach,  Helen E. and Ahern,  Woody and Borst,  Andrew J. and Ragotte,  Robert J. and Milles,  Lukas F. and Wicky,  Basile I. M. and Hanikel,  Nikita and Pellock,  Samuel J. and Courbet,  Alexis and Sheffler,  William and Wang,  Jue and Venkatesh,  Preetham and Sappington,  Isaac and Torres,  Susana Vázquez and Lauko,  Anna and De Bortoli,  Valentin and Mathieu,  Emile and Ovchinnikov,  Sergey and Barzilay,  Regina and Jaakkola,  Tommi S. and DiMaio,  Frank and Baek,  Minkyung and Baker,  David},
+  DOI = {10.1038/s41586-023-06415-8},
+  journal = {Nature},
+  year = {2023},
+  month = jul
+}
+```
+
+```bibtex
+@article{Mirdita2022,
+  title = {ColabFold: making protein folding accessible to all},
+  author = {Mirdita,  Milot and Sch\"{u}tze,  Konstantin and Moriwaki,  Yoshitaka and Heo,  Lim and Ovchinnikov,  Sergey and Steinegger,  Martin},
+  DOI = {10.1038/s41592-022-01488-1},
+  journal = {Nature Methods},
+  year = {2022},
+  month = may
+}
+```
+
+```bibtex
+@article{Jumper2021,
+  title = {Highly accurate protein structure prediction with AlphaFold},
+  author = {Jumper,  John and Evans,  Richard and Pritzel,  Alexander and Green,  Tim and Figurnov,  Michael and Ronneberger,  Olaf and Tunyasuvunakool,  Kathryn and Bates,  Russ and Žídek,  Augustin and Potapenko,  Anna and Bridgland,  Alex and Meyer,  Clemens and Kohl,  Simon A. A. and Ballard,  Andrew J. and Cowie,  Andrew and Romera-Paredes,  Bernardino and Nikolov,  Stanislav and Jain,  Rishub and Adler,  Jonas and Back,  Trevor and Petersen,  Stig and Reiman,  David and Clancy,  Ellen and Zielinski,  Michal and Steinegger,  Martin and Pacholska,  Michalina and Berghammer,  Tamas and Bodenstein,  Sebastian and Silver,  David and Vinyals,  Oriol and Senior,  Andrew W. and Kavukcuoglu,  Koray and Kohli,  Pushmeet and Hassabis,  Demis},
+  DOI = {10.1038/s41586-021-03819-2},
+  journal = {Nature},
+  year = {2021},
+  month = jul
+}
+```
+
+```bibtex
+@article{Chaudhury2010,
+  title = {PyRosetta: a script-based interface for implementing molecular modeling algorithms using Rosetta},
+  author = {Chaudhury,  Sidhartha and Lyskov,  Sergey and Gray,  Jeffrey J.},
+  DOI = {10.1093/bioinformatics/btq007},
+  journal = {Bioinformatics},
+  year = {2010},
+  month = jan
+}
+```
