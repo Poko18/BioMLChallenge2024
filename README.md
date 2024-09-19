@@ -278,6 +278,28 @@ For questions, suggestions, or collaborations, feel free to reach out tadej.satl
 ```
 
 ```bibtex
+@article{Dauparas2022,
+  title = {Robust deep learning–based protein sequence design using ProteinMPNN},
+  author = {Dauparas,  J. and Anishchenko,  I. and Bennett,  N. and Bai,  H. and Ragotte,  R. J. and Milles,  L. F. and Wicky,  B. I. M. and Courbet,  A. and de Haas,  R. J. and Bethel,  N. and Leung,  P. J. Y. and Huddy,  T. F. and Pellock,  S. and Tischer,  D. and Chan,  F. and Koepnick,  B. and Nguyen,  H. and Kang,  A. and Sankaran,  B. and Bera,  A. K. and King,  N. P. and Baker,  D.},
+  DOI = {10.1126/science.add2187},
+  journal = {Science},
+  year = {2022},
+  month = oct
+}
+```
+
+```bibtex
+@article{Evans2021,
+  title = {Protein complex prediction with AlphaFold-Multimer},
+  author = {Evans,  Richard and O’Neill,  Michael and Pritzel,  Alexander and Antropova,  Natasha and Senior,  Andrew and Green,  Tim and Žídek,  Augustin and Bates,  Russ and Blackwell,  Sam and Yim,  Jason and Ronneberger,  Olaf and Bodenstein,  Sebastian and Zielinski,  Michal and Bridgland,  Alex and Potapenko,  Anna and Cowie,  Andrew and Tunyasuvunakool,  Kathryn and Jain,  Rishub and Clancy,  Ellen and Kohli,  Pushmeet and Jumper,  John and Hassabis,  Demis},
+  DOI = {10.1101/2021.10.04.463034},
+  journal = {bioRxiv},
+  year = {2021},
+  month = oct 
+}
+```
+
+```bibtex
 @article{Mirdita2022,
   title = {ColabFold: making protein folding accessible to all},
   author = {Mirdita,  Milot and Sch\"{u}tze,  Konstantin and Moriwaki,  Yoshitaka and Heo,  Lim and Ovchinnikov,  Sergey and Steinegger,  Martin},
