@@ -105,7 +105,8 @@ def write_df_to_csv(df, output_path):
     mode, header = ("a", False) if os.path.isfile(output_path) else ("w", True)
     with open(output_path, mode) as f:
         fcntl.flock(f, fcntl.LOCK_EX)
-        time.sleep(np.random.uniform(0, 0.05))
+        rng = np.random.default_rng(42)
+        time.sleep(rng.uniform(0, 0.1))
         df.to_csv(f, header=header, index=False)
         fcntl.flock(f, fcntl.LOCK_UN)
 

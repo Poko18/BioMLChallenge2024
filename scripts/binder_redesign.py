@@ -49,7 +49,6 @@ af_model = mk_af_model(protocol="binder",
                        recycle_mode=recycle_mode,
                        num_recycles=num_recycles,
                        data_dir=data_dir,
-                       # model_names=["model_1_multimer_v3"]
                        )
 
 af_model.prep_inputs(

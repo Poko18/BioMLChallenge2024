@@ -107,7 +107,7 @@ def write_df_to_csv(df: pd.DataFrame, output_path: str) -> None:
     mode = 'a' if os.path.isfile(output_path) else 'w'
     with open(output_path, mode) as f:
         fcntl.flock(f, fcntl.LOCK_EX)  # lock the file for exclusive access
-        rng = np.random.default_rng()
+        rng = np.random.default_rng(42)
         time.sleep(rng.uniform(0, 0.1))
         df.to_csv(f, header=(mode == 'w'), index=False)
         fcntl.flock(f, fcntl.LOCK_UN)  # release the lock

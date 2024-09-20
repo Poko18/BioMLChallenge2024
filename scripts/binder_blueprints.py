@@ -94,9 +94,7 @@ class BinderBlueprints:
         """
         num_elements = len(self.elements)
         # Check if specific lengths are provided, otherwise calculate based on the total size
-        if self.element_lengths:
-            self.element_lengths = self.element_lengths
-        else:
+        if not self.element_lengths:
             self.element_lengths = [0] * num_elements
             total_linker_length = (num_elements - 1) * self.linker
             total_sse_length = self.size - total_linker_length
@@ -134,9 +132,7 @@ class BinderBlueprints:
                     extra_length -= 1
 
         # Set linker lengths
-        if self.linker_lengths:
-            self.linker_lengths = self.linker_lengths
-        else:
+        if not self.linker_lengths:
             self.linker_lengths = [self.linker] * (num_elements - 1)
 
     def generate_matrices(self):
